@@ -23,6 +23,7 @@ defmodule ChocolateRain.Mixfile do
   defp deps do
     [
       {:httpoison, "~> 1.0"},
+      {:poison, "~> 1.1.1"},
       {:dogma, "~> 0.1", only: :dev}
     ]
   end
