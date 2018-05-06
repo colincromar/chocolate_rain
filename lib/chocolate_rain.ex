@@ -22,15 +22,19 @@ defmodule ChocolateRain do
     headers ++ [{"Authorization", "Bearer #{token}"}]
   end
 
-  def call(url, headers \\ []) do
-    url
-    require IEx; IEx.pry
-    |> HTTPoison.get(headers)
+  def call(url, method, body \\ "", query_params \\ %{}, headers \ []) do
+    HTTPoison.request(
+      method,
+      url |> clean_url,
+      body |> encode(content_type(headers)),
+      headers |> clean_headers,
+      query_params |> clean_params
+    )
     |> case do
-         {:ok, %{body: raw, status_code: code, headers: headers}} ->
-           {code, raw, headers}
-         {:error, %{reason: reason}} -> {:error, reason, []}
-      end
+        {:ok, %{body: raw, status_code: code, headers: headers}} ->
+          {code, raw, headers}
+        {:error, %{reason: reason}} -> {:error, reason, []}
+       end
   end
 
   def decode({ok, body, "application/json"}) do
